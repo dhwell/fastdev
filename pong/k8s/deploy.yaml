@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: pong-service
+  labels:
+    app: pong-service
+spec:
+  clusterIP: None
+  ports:
+    - port: 80
+      name: pong
+  selector:
+    app: pong-service
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pong
+  labels:
+    app: pong
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pong-service
+  template:
+    metadata:
+      labels:
+        app: pong-service
+    spec:
+      containers:
+        - name: pong-service
+          image: pong
+          ports:
+            - containerPort: 80
+              name: http

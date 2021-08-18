@@ -1,0 +1,43 @@
+apiVersion: skaffold/v2beta17
+kind: Config
+metadata:
+  name: ping
+build:
+  artifacts:
+    - image: ping
+      context: ./ping
+  tagPolicy:
+    envTemplate:
+      template: "latest"
+deploy:
+  kubectl:
+    manifests:
+      - ./ping/k8s/*
+portForward:
+  - resourceType: Service
+    resourceName: ping-service
+    port: 80
+    localPort: 50080
+
+---
+
+apiVersion: skaffold/v2beta17
+kind: Config
+metadata:
+  name: pong
+build:
+  artifacts:
+    - image: pong
+      context: ./pong
+  tagPolicy:
+    envTemplate:
+      template: "latest"
+deploy:
+  kubectl:
+    manifests:
+      - ./pong/k8s/*
+portForward:
+  - resourceType: Service
+    resourceName: pong-service
+    port: 80
+    localPort: 60080

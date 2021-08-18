@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ping-service
+  labels:
+    app: ping-service
+spec:
+  clusterIP: None
+  ports:
+    - port: 80
+      name: ping
+  selector:
+    app: ping-service
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ping
+  labels:
+    app: ping
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ping-service
+  template:
+    metadata:
+      labels:
+        app: ping-service
+    spec:
+      containers:
+        - name: ping-service
+          image: ping
+          ports:
+            - containerPort: 80
+              name: http
